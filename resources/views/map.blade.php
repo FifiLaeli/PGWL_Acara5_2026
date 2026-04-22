@@ -244,6 +244,95 @@
 
         drawnItems.addLayer(layer);
     });
+
+    // Points Layer
+// Points Layer
+var pointsLayer = L.geoJSON(null, {
+    onEachFeature: function (feature, layer) {
+        var popup_content = "Nama: " + feature.properties.name + "<br>" +
+                            "Deskripsi: " + feature.properties.description + "<br>" +
+                            "Dibuat: " + feature.properties.created_at + "<br>";
+        layer.bindPopup(popup_content);
+    }
+});
+
+// Polyline Layer
+var polylinesLayer = L.geoJSON(null, {
+    onEachFeature: function (feature, layer) {
+        var popup_content = "Nama: " + feature.properties.name + "<br>" +
+                            "Deskripsi: " + feature.properties.description + "<br>" +
+                            "Dibuat: " + feature.properties.created_at + "<br>";
+        layer.bindPopup(popup_content);
+    }
+});
+
+// Polygon Layer
+var polygonsLayer = L.geoJSON(null, {
+    onEachFeature: function (feature, layer) {
+        var popup_content = "Nama: " + feature.properties.name + "<br>" +
+                            "Deskripsi: " + feature.properties.description + "<br>" +
+                            "Dibuat: " + feature.properties.created_at + "<br>";
+        layer.bindPopup(popup_content);
+    }
+});
+
+$.getJSON("http://localhost:8000/api/points", function (data) {
+    pointsLayer.addData(data);
+    map.addLayer(pointsLayer);
+});
+
+$.getJSON("http://localhost:8000/api/polylines", function (data) {
+    polylinesLayer.addData(data);
+    map.addLayer(polylinesLayer);
+});
+
+$.getJSON("http://localhost:8000/api/polygons", function (data) {
+    polygonsLayer.addData(data);
+    map.addLayer(polygonsLayer);
+});
+
+// Basemap Layers
+var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+});
+
+var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '&copy; Google Satellite'
+});
+
+var hybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '&copy; Google Hybrid'
+});
+
+var terrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '&copy; Google Terrain'
+});
+
+// Control Layer
+var baseMaps = {
+    "OpenStreetMap": osm,
+    "Satellite": satellite,
+    "Hybrid": hybrid,
+    "Terrain": terrain
+};
+
+
+var overlayMaps = {
+	"Points": pointsLayer,
+	"Polylines": polylinesLayer,
+	"Polygons": polygonsLayer
+};
+
+var controllayer = L.control.layers(baseMaps, overlayMaps);
+controllayer.addTo(map);
+
 </script>
 
 @endsection
