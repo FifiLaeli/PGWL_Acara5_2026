@@ -26,11 +26,13 @@ class PointController extends Controller
 
     public function store(Request $request)
     {
+
          // Validasi input
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'geometry_point' => 'required|string',
             'description'    => 'required|string',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'name.required'           => 'Nama point wajib diisi.',
             'name.max'                => 'Nama point tidak boleh lebih dari 255 karakter.',
@@ -38,12 +40,30 @@ class PointController extends Controller
             'geometry_point.required' => 'Geometri point wajib diisi.',
             'description.required'    => 'Deskripsi point wajib diisi.',
             'description.string'      => 'Deskripsi harus berupa teks.',
+            'image.image'             => 'File yang diunggah harus berupa gambar.',
+            'image.mimes'             => 'Format gambar yang diizinkan adalah: jpeg, png, jpg, gif.',
+            'image.max'               => 'Ukuran gambar tidak boleh lebih dari 2MB.',
         ]);
+
+        // Pastikan direktori penyimpanan gambar ada
+        if (!is_dir('storage/images')) {
+            mkdir('./storage/images', 0777);
+            }
+
+        // Simpan gambar jika ada
+        if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $name_image = time() . "_point." . strtolower($image->getClientOriginalExtension());
+        $image->move('storage/images', $name_image);
+        } else {
+        $name_image = null;
+        }
 
         $data = [
             'name'        => $validated['name'],
             'geom'        => $validated['geometry_point'],
             'description' => $validated['description'],
+            'image'       => $name_image,
         ];
 
         // Simpan ke database

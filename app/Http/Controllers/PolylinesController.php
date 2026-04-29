@@ -37,6 +37,7 @@ class PolylinesController extends Controller
             'name'              => 'required|string|max:255',
             'geometry_polyline' => 'required|string',
             'description'       => 'required|string',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'name.required'              => 'Nama polyline wajib diisi.',
             'name.max'                   => 'Nama polyline tidak boleh lebih dari 255 karakter.',
@@ -44,12 +45,30 @@ class PolylinesController extends Controller
             'geometry_polyline.required' => 'Geometri polyline wajib diisi.',
             'description.required'       => 'Deskripsi polyline wajib diisi.',
             'description.string'         => 'Deskripsi harus berupa teks.',
+            'image.image'             => 'File yang diunggah harus berupa gambar.',
+            'image.mimes'             => 'Format gambar yang diizinkan adalah: jpeg, png, jpg, gif.',
+            'image.max'               => 'Ukuran gambar tidak boleh lebih dari 2MB.',
         ]);
+
+        // Pastikan direktori penyimpanan gambar ada
+        if (!is_dir('storage/images')) {
+            mkdir('./storage/images', 0777);
+            }
+
+        // Simpan gambar jika ada
+        if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $name_image = time() . "_polyline." . strtolower($image->getClientOriginalExtension());
+        $image->move('storage/images', $name_image);
+        } else {
+        $name_image = null;
+        }
 
         $data = [
             'name'        => $validated['name'],
             'geom'        => $validated['geometry_polyline'],
             'description' => $validated['description'],
+            'image'       => $name_image,
         ];
 
         $saved = $this->polylines->create($data);

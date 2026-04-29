@@ -37,7 +37,7 @@
         <h5 class="modal-title">Input Polygon</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ route('polygons.store') }}" method="POST">
+      <form action="{{ route('polygons.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-body">
 
@@ -55,6 +55,14 @@
             <label for="geometry_polygon" class="form-label">Geometry Polygon</label>
             <textarea class="form-control" id="geometry_polygon" name="geometry_polygon" rows="3" readonly></textarea>
           </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input class="form-control" type="file" id="Image" name="image"
+            onchange="document.getElementById('preview-image-polygon').src = window.URL.createObjectURL(this.files[0])">
+            <img src="" alt="" id="preview-image-polygon" class="img-thumbnail" width="400">
+          </div>
+
 
         </div>
         <div class="modal-footer">
@@ -75,7 +83,7 @@
         <h5 class="modal-title">Input Polyline</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ route('polylines.store') }}" method="POST">
+      <form action="{{ route('polylines.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-body">
 
@@ -92,6 +100,13 @@
           <div class="mb-3">
             <label for="geometry_polyline" class="form-label">Geometry Polyline</label>
             <textarea class="form-control" id="geometry_polyline" name="geometry_polyline" rows="3" readonly></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input class="form-control" type="file" id="Image" name="image"
+            onchange="document.getElementById('preview-image-polyline').src = window.URL.createObjectURL(this.files[0])">
+            <img src="" alt="" id="preview-image-polyline" class="img-thumbnail" width="400">
           </div>
 
         </div>
@@ -112,7 +127,7 @@
         <h5 class="modal-title">Input Point</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ route('points.store') }}" method="POST">
+      <form action="{{ route('points.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-body">
 
@@ -129,6 +144,14 @@
           <div class="mb-3">
             <label for="geometry_point" class="form-label">Geometry Point</label>
             <textarea class="form-control" id="geometry_point" name="geometry_point" rows="3" readonly></textarea>
+          </div>
+
+         <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input class="form-control" type="file" id="Image" name="image"
+            onchange="document.getElementById('preview-image-point').src = window.URL.createObjectURL(this.files[0])">
+
+            <img src="" alt="" id="preview-image-point" class="img-thumbnail" width="400">
           </div>
 
         </div>
@@ -245,13 +268,13 @@
         drawnItems.addLayer(layer);
     });
 
-    // Points Layer
 // Points Layer
 var pointsLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         var popup_content = "Nama: " + feature.properties.name + "<br>" +
                             "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>";
+                            "Dibuat: " + feature.properties.created_at + "<br>" +
+                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Point' class='img-thumbnail' width='400'>" : "");
         layer.bindPopup(popup_content);
     }
 });
@@ -261,7 +284,8 @@ var polylinesLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         var popup_content = "Nama: " + feature.properties.name + "<br>" +
                             "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>";
+                            "Dibuat: " + feature.properties.created_at + "<br>"+
+                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Polyline' class='img-thumbnail' width='400'>" : "");
         layer.bindPopup(popup_content);
     }
 });
@@ -271,7 +295,8 @@ var polygonsLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         var popup_content = "Nama: " + feature.properties.name + "<br>" +
                             "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>";
+                            "Dibuat: " + feature.properties.created_at + "<br>"+
+                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Polygon' class='img-thumbnail' width='400'>" : "");
         layer.bindPopup(popup_content);
     }
 });
