@@ -271,33 +271,127 @@
 // Points Layer
 var pointsLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
-        var popup_content = "Nama: " + feature.properties.name + "<br>" +
-                            "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>" +
-                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Point' class='img-thumbnail' width='400'>" : "");
+
+        // Route delete
+        var routedelete = "{{ route('points.delete', ':id') }}";
+        routedelete = routedelete.replace(':id', feature.properties.id);
+
+        var popup_content = `
+            <b>Nama:</b> ${feature.properties.name}<br>
+            <b>Deskripsi:</b> ${feature.properties.description}<br>
+            <b>Dibuat:</b> ${feature.properties.created_at}<br>
+
+            ${feature.properties.image
+                ? `<img src="{{ asset('storage/images') }}/${feature.properties.image}" class="img-thumbnail mt-2 mb-2" width="300"><br>`
+                : ''
+            }
+
+            <form action="${routedelete}" method="POST"
+                  onsubmit="return confirm('Hapus titik ini?')">
+
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+
+                <button type="submit"
+                        class="btn btn-sm btn-danger mt-2"
+                        title="Delete">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+
+            </form>
+        `;
+
         layer.bindPopup(popup_content);
     }
 });
 
-// Polyline Layer
+// ==========================
+// POLYLINE LAYER
+// ==========================
 var polylinesLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
-        var popup_content = "Nama: " + feature.properties.name + "<br>" +
-                            "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>"+
-                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Polyline' class='img-thumbnail' width='400'>" : "");
+
+        // Route delete polyline
+        var routedelete = "{{ route('polylines.delete', ':id') }}";
+        routedelete = routedelete.replace(':id', feature.properties.id);
+
+        var popup_content = `
+            <b>Nama:</b> ${feature.properties.name}<br>
+            <b>Deskripsi:</b> ${feature.properties.description}<br>
+            <b>Dibuat:</b> ${feature.properties.created_at}<br>
+
+            ${feature.properties.image
+                ? `<img src="{{ asset('storage/images') }}/${feature.properties.image}"
+                        class="img-thumbnail mt-2 mb-2" width="300"><br>`
+                : ''
+            }
+
+            <form action="${routedelete}" method="POST"
+                  onsubmit="return confirm('Hapus polyline ini?')">
+
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+
+                <button type="submit"
+                        class="btn btn-sm btn-danger mt-2"
+                        title="Delete">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        `;
+
         layer.bindPopup(popup_content);
+    },
+
+    style: {
+        color: "blue",
+        weight: 4
     }
 });
 
-// Polygon Layer
+
+// ==========================
+// POLYGON LAYER
+// ==========================
 var polygonsLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
-        var popup_content = "Nama: " + feature.properties.name + "<br>" +
-                            "Deskripsi: " + feature.properties.description + "<br>" +
-                            "Dibuat: " + feature.properties.created_at + "<br>"+
-                            (feature.properties.image ? "<img src='http://localhost:8000/storage/images/" + feature.properties.image + "' alt='Image Polygon' class='img-thumbnail' width='400'>" : "");
+
+        // Route delete polygon
+        var routedelete = "{{ route('polygons.delete', ':id') }}";
+        routedelete = routedelete.replace(':id', feature.properties.id);
+
+        var popup_content = `
+            <b>Nama:</b> ${feature.properties.name}<br>
+            <b>Deskripsi:</b> ${feature.properties.description}<br>
+            <b>Dibuat:</b> ${feature.properties.created_at}<br>
+
+            ${feature.properties.image
+                ? `<img src="{{ asset('storage/images') }}/${feature.properties.image}"
+                        class="img-thumbnail mt-2 mb-2" width="300"><br>`
+                : ''
+            }
+
+            <form action="${routedelete}" method="POST"
+                  onsubmit="return confirm('Hapus polygon ini?')">
+
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+
+                <button type="submit"
+                        class="btn btn-sm btn-danger mt-2"
+                        title="Delete">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        `;
+
         layer.bindPopup(popup_content);
+    },
+
+    style: {
+        color: "green",
+        weight: 2,
+        fillOpacity: 0.5
     }
 });
 

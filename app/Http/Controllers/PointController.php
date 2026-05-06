@@ -26,8 +26,7 @@ class PointController extends Controller
 
     public function store(Request $request)
     {
-
-         // Validasi input
+        // Validasi input
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'geometry_point' => 'required|string',
@@ -41,22 +40,22 @@ class PointController extends Controller
             'description.required'    => 'Deskripsi point wajib diisi.',
             'description.string'      => 'Deskripsi harus berupa teks.',
             'image.image'             => 'File yang diunggah harus berupa gambar.',
-            'image.mimes'             => 'Format gambar yang diizinkan adalah: jpeg, png, jpg, gif.',
-            'image.max'               => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+            'image.mimes'             => 'Format gambar: jpeg, png, jpg, gif.',
+            'image.max'               => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-        // Pastikan direktori penyimpanan gambar ada
-        if (!is_dir('storage/images')) {
-            mkdir('./storage/images', 0777);
-            }
+        // Pastikan folder ada
+        if (!is_dir(public_path('storage/images'))) {
+            mkdir(public_path('storage/images'), 0777, true);
+        }
 
-        // Simpan gambar jika ada
+        // Upload gambar
         if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $name_image = time() . "_point." . strtolower($image->getClientOriginalExtension());
-        $image->move('storage/images', $name_image);
+            $image = $request->file('image');
+            $name_image = time() . "_point." . strtolower($image->getClientOriginalExtension());
+            $image->move(public_path('storage/images'), $name_image);
         } else {
-        $name_image = null;
+            $name_image = null;
         }
 
         $data = [
@@ -66,14 +65,15 @@ class PointController extends Controller
             'image'       => $name_image,
         ];
 
-        // Simpan ke database
         $saved = $this->points->create($data);
 
         if ($saved) {
-            return redirect()->route('peta')->with('success', 'Point berhasil ditambahkan!');
+            return redirect()->route('peta')
+                ->with('success', 'Point berhasil ditambahkan!');
         }
 
-        return redirect()->route('peta')->with('error', 'Gagal menambahkan point!');
+        return redirect()->route('peta')
+            ->with('error', 'Gagal menambahkan point!');
     }
 
     public function show(string $id)
@@ -93,6 +93,29 @@ class PointController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        // Cari data point
+        $point = $this->points->find($id);
+
+        if (!$point) {
+            return redirect()->route('peta')
+                ->with('error', 'Data point tidak ditemukan!');
+        }
+
+        $image = $point->image;
+
+        // Hapus data point
+        if ($this->points->destroy($id)) {
+
+            // Hapus file gambar jika ada
+            if ($image !== null && file_exists(public_path('storage/images/' . $image))) {
+                unlink(public_path('storage/images/' . $image));
+            }
+
+            return redirect()->route('peta')
+                ->with('success', 'Point berhasil dihapus!');
+        }
+
+        return redirect()->route('peta')
+            ->with('error', 'Gagal menghapus point!');
     }
 }

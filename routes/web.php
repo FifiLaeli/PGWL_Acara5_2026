@@ -21,12 +21,21 @@ Route::get('/tabel', [PageController::class, 'tabel'])->name('tabel');
 Route::post('/points', [App\Http\Controllers\PointController::class, 'store'])
 ->name('points.store');
 
+Route::delete('/delete-points/{id}', [App\Http\Controllers\PointController::class, 'destroy'])
+->name('points.delete');
+
 //Polylines
 Route::post('/polylines', [App\Http\Controllers\PolylinesController::class, 'store'])
 ->name('polylines.store');
 
+Route::delete('/delete-polylines/{id}', [App\Http\Controllers\PolylinesController::class, 'destroy'])
+->name('polylines.delete');
+
 //Polygons
 Route::post('/polygons', [App\Http\Controllers\PolygonsController::class, 'store'])
 ->name('polygons.store');
+
+Route::delete('/delete-polygons/{id}', [App\Http\Controllers\PolygonsController::class, 'destroy'])
+->name('polygons.delete');
 
 require __DIR__.'/settings.php';
