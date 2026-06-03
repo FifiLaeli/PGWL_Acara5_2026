@@ -276,6 +276,10 @@ var pointsLayer = L.geoJSON(null, {
         var routedelete = "{{ route('points.delete', ':id') }}";
         routedelete = routedelete.replace(':id', feature.properties.id);
 
+        // Route edit
+        var routeedit = "{{ route('points.edit', ':id') }}";
+        routeedit = routeedit.replace(':id', feature.properties.id);
+
         var popup_content = `
             <b>Nama:</b> ${feature.properties.name}<br>
             <b>Deskripsi:</b> ${feature.properties.description}<br>
@@ -285,6 +289,8 @@ var pointsLayer = L.geoJSON(null, {
                 ? `<img src="{{ asset('storage/images') }}/${feature.properties.image}" class="img-thumbnail mt-2 mb-2" width="300"><br>`
                 : ''
             }
+              <div class="row">
+                <div class="col-3">
 
             <form action="${routedelete}" method="POST"
                   onsubmit="return confirm('Hapus titik ini?')">
@@ -299,6 +305,13 @@ var pointsLayer = L.geoJSON(null, {
                 </button>
 
             </form>
+                </div>
+                <div class="col-3">
+             <a href='${routeedit}' class='btn btn-sm btn-warning mt-2' ><i class='fas fa-edit'></i> Edit</a>
+                </div>
+              </div>
+
+
         `;
 
         layer.bindPopup(popup_content);
@@ -315,6 +328,10 @@ var polylinesLayer = L.geoJSON(null, {
         var routedelete = "{{ route('polylines.delete', ':id') }}";
         routedelete = routedelete.replace(':id', feature.properties.id);
 
+        // Route edit polyline
+        var routeedit = "{{ route('polylines.edit', ':id') }}";
+        routeedit = routeedit.replace(':id', feature.properties.id);
+
         var popup_content = `
             <b>Nama:</b> ${feature.properties.name}<br>
             <b>Deskripsi:</b> ${feature.properties.description}<br>
@@ -325,6 +342,9 @@ var polylinesLayer = L.geoJSON(null, {
                         class="img-thumbnail mt-2 mb-2" width="300"><br>`
                 : ''
             }
+
+            <div class="row">
+                <div class="col-3">
 
             <form action="${routedelete}" method="POST"
                   onsubmit="return confirm('Hapus polyline ini?')">
@@ -337,7 +357,13 @@ var polylinesLayer = L.geoJSON(null, {
                         title="Delete">
                     <i class="fas fa-trash"></i> Delete
                 </button>
+
             </form>
+                </div>
+                <div class="col-3">
+             <a href='${routeedit}' class='btn btn-sm btn-warning mt-2' ><i class='fas fa-edit'></i> Edit</a>
+                </div>
+              </div>
         `;
 
         layer.bindPopup(popup_content);
@@ -360,6 +386,10 @@ var polygonsLayer = L.geoJSON(null, {
         var routedelete = "{{ route('polygons.delete', ':id') }}";
         routedelete = routedelete.replace(':id', feature.properties.id);
 
+        // Route edit polygon
+        var routeedit = "{{ route('polygons.edit', ':id') }}";
+        routeedit = routeedit.replace(':id', feature.properties.id);
+
         var popup_content = `
             <b>Nama:</b> ${feature.properties.name}<br>
             <b>Deskripsi:</b> ${feature.properties.description}<br>
@@ -370,6 +400,9 @@ var polygonsLayer = L.geoJSON(null, {
                         class="img-thumbnail mt-2 mb-2" width="300"><br>`
                 : ''
             }
+
+            <div class="row">
+                <div class="col-3">
 
             <form action="${routedelete}" method="POST"
                   onsubmit="return confirm('Hapus polygon ini?')">
@@ -382,7 +415,13 @@ var polygonsLayer = L.geoJSON(null, {
                         title="Delete">
                     <i class="fas fa-trash"></i> Delete
                 </button>
+
             </form>
+                </div>
+                <div class="col-3">
+             <a href='${routeedit}' class='btn btn-sm btn-warning mt-2' ><i class='fas fa-edit'></i> Edit</a>
+                </div>
+              </div>
         `;
 
         layer.bindPopup(popup_content);

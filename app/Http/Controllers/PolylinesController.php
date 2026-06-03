@@ -92,7 +92,14 @@ class PolylinesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+         $data = [
+            'title' => 'Edit Polyline',
+            'id'    => $id,
+            'polyline' => $this->polylines->find($id),
+        ];
+
+        return view('map-edit-polylines', $data);
     }
 
     /**
@@ -100,7 +107,61 @@ class PolylinesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //validasi input
+         $validated = $request->validate([
+        'name'              => 'required|string|max:255',
+        'geometry_polyline' => 'required|string',
+        'description'       => 'required|string',
+        'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+            $point = $this->polylines->find($id);
+
+        if (!$point) {
+            return redirect()->route('peta')
+                ->with('error', 'Data polyline tidak ditemukan!');
+        }
+
+        if ($request->hasFile('image')) {
+
+            // hapus gambar lama
+            if (
+                $point->image &&
+                file_exists(public_path('storage/images/' . $point->image))
+            ) {
+                unlink(public_path('storage/images/' . $point->image));
+            }
+
+            $image = $request->file('image');
+
+            $name_image = time() . "_polyline." .
+                strtolower($image->getClientOriginalExtension());
+
+            $image->move(public_path('storage/images'), $name_image);
+
+        } else {
+
+            $name_image = $point->image;
+        }
+
+        $data = [
+            'name'        => $validated['name'],
+            'geom'        => $validated['geometry_polyline'],
+            'description' => $validated['description'],
+            'image'       => $name_image,
+        ];
+
+        $updated = $this->polylines
+            ->where('id', $id)
+            ->update($data);
+
+        if ($updated) {
+            return redirect()->route('peta')
+                ->with('success', 'Polyline berhasil diupdate!');
+        }
+
+        return redirect()->route('peta')
+            ->with('error', 'Gagal mengupdate polyline!');
+
     }
 
     /**

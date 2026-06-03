@@ -1,72 +1,182 @@
 @extends('layouts.template')
 
-@section ('styles')
-    <style>
-        body {
-            margin: 0;
-        }
-    </style>
+@section('styles')
+<link rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+<style>
+    body {
+        margin: 0;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #8B5E3C;
+        color: white;
+    }
+</style>
 @endsection
 
 @section('content')
 
-    <div class="container">
-        <div class="card">
+<div class="container mt-4">
+
+    {{-- ================= POINT ================= --}}
+    <div class="card shadow-sm">
         <div class="card-header">
-            <h3>Tabel Data</h3>
+            <h4>Tabel Point</h4>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered table-striped" id="table-point">
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Deskripsi</th>
+                        <th>Foto</th>
+                        <th>Tanggal Dibuat</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @php $no = 1; @endphp
+
+                    @foreach ($points as $p)
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $p->name }}</td>
+                        <td>{{ $p->description }}</td>
+
+                        <td>
+                            <img src="{{ asset('storage/images/' . $p->image) }}"
+                                width="100">
+                        </td>
+
+                        <td>{{ $p->created_at }}</td>
+                    </tr>
+                    @endforeach
+
+                </tbody>
+
+            </table>
         </div>
     </div>
+
+{{-- ================= POLYLINE ================= --}}
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h4>Tabel Polyline</h4>
+    </div>
+
     <div class="card-body">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped" id="table-polyline">
+
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>No</th>
                     <th>Nama</th>
-                    <th>Alamat</th>
                     <th>Deskripsi</th>
+                    <th>Foto</th>
+                    <th>Tanggal Dibuat</th>
                 </tr>
             </thead>
+
             <tbody>
+                @php $no = 1; @endphp
+
+                @foreach ($polylines as $pl)
                 <tr>
-                    <td>1</td>
-                    <td>Stadion Kridosono</td>
-                    <td>-7.78781, 110.374296</td>
-                    <td>Kota Baru</td>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $pl->name }}</td>
+                    <td>{{ $pl->description }}</td>
+
+                    <td>
+                        <img src="{{ asset('storage/images/' . $pl->image) }}"
+                            width="100">
+                    </td>
+
+                    <td>{{ $pl->created_at }}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Bandara Adisutjipto</td>
-                    <td>-7.794337, 110.427189</td>
-                    <td>Bandara Internasional</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Alun-alun Utara</td>
-                    <td>-7.803989, 110.364382</td>
-                    <td>Halaman depan kraton jogja</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Mandala Krida</td>
-                    <td>-7.795931, 110.384316</td>
-                    <td>Stadion Bal-balan</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Gedung Pusat UGM</td>
-                    <td>-7.768272, 110.378373</td>
-                    <td>Kantor Pusat UGM</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>Gembira Loka Zoo</td>
-                    <td>-7.806497, 110.396805</td>
-                    <td>Kebun Binatang</td>
-                </tr>
+                @endforeach
+
             </tbody>
+
         </table>
     </div>
+</div>
+
+
+{{-- ================= POLYGON ================= --}}
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h4>Tabel Polygon</h4>
     </div>
+
+    <div class="card-body">
+        <table class="table table-bordered table-striped" id="table-polygon">
+
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Deskripsi</th>
+                    <th>Foto</th>
+                    <th>Tanggal Dibuat</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @php $no = 1; @endphp
+
+                @foreach ($polygons as $pg)
+                <tr>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $pg->name }}</td>
+                    <td>{{ $pg->description }}</td>
+
+                    <td>
+                        <img src="{{ asset('storage/images/' . $pg->image) }}"
+                            width="100">
+                    </td>
+
+                    <td>{{ $pg->created_at }}</td>
+                </tr>
+                @endforeach
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+</div>
+
 @endsection
 
+
 @section('scripts')
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#table-point').DataTable();
+
+        $('#table-polyline').DataTable();
+
+        $('#table-polygon').DataTable();
+
+    });
+</script>
+
+@endsection
